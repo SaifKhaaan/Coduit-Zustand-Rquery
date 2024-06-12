@@ -1,9 +1,24 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable jsx-a11y/alt-text */
 /* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable react/jsx-no-comment-textnodes */
 import React from 'react'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
+// eslint-disable-next-line no-unused-vars
+import axios from 'axios'
+
+
 
 const Home = () => {
+    const postsQuery = useQuery({
+        queryKey: "articles", 
+        queryFn: async () => {
+            const response = await axios.get('https://api.realworld.io/api');
+            return response.data.articles; 
+        },
+        onError: (error) => console.error(error), 
+    });
+
     return (
         <div>
             <div class="home-page">
@@ -18,7 +33,7 @@ const Home = () => {
                     <div class="row">
                         <div class="col-md-9">
                             <div class="feed-toggle">
-                                <ul class="nav nav-pills outline-active">
+                                 <ul class="nav nav-pills outline-active">
                                     <li class="nav-item">
                                         <a class="nav-link" href="">Your Feed</a>
                                     </li>
@@ -28,7 +43,38 @@ const Home = () => {
                                 </ul>
                             </div>
 
-                            <div class="article-preview">
+
+
+                            {postsQuery?.articles?.map((article) => (
+                                <div key={article.slug} className="article-preview">
+                                    <div className="article-meta">
+                                        <a
+                                            href={`/profile/${article.author.username}`}
+                                            className="author"
+                                        >
+                                            {article.author.username}
+                                        </a>
+                                        <span className="date">{new Date(article.createdAt).toDateString()}</span>
+                                    </div>
+                                    <a href={`/article/${article.slug}`} className="preview-link">
+                                        <h1>{article.title}</h1>
+                                        <p>{article.description}</p>
+                                        <span>Read more...</span>
+                                        <ul className="tag-list">
+                                            {article.tagList.map((tag) => (
+                                                <li key={tag} className="tag-default tag-pill tag-outline">
+                                                    {tag}
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    </a>
+                                </div>
+                            ))}
+                            
+
+     
+
+                            {/* <div class="article-preview">
                                 <div class="article-meta">
                                     <a href="/profile/eric-simons"><img src="http://i.imgur.com/Qr71crq.jpg" /></a>
                                     <div class="info">
@@ -48,9 +94,9 @@ const Home = () => {
                                         <li class="tag-default tag-pill tag-outline">implementations</li>
                                     </ul>
                                 </a>
-                            </div>
+                            </div> */}
 
-                            <div class="article-preview">
+                            {/* <div class="article-preview">
                                 <div class="article-meta">
                                     <a href="/profile/albert-pai"><img src="http://i.imgur.com/N4VcUeJ.jpg" /></a>
                                     <div class="info">
@@ -70,7 +116,7 @@ const Home = () => {
                                         <li class="tag-default tag-pill tag-outline">implementations</li>
                                     </ul>
                                 </a>
-                            </div>
+                            </div> */}
 
                             <ul class="pagination">
                                 <li class="page-item active">
@@ -88,7 +134,6 @@ const Home = () => {
 
                                 <div class="tag-list">
                                     <a href="" class="tag-pill tag-default">programming</a>
-                                  // eslint-disable-next-line jsx-a11y/anchor-is-valid
                                     <a href="" class="tag-pill tag-default">javascript</a>
                                     <a href="" class="tag-pill tag-default">emberjs</a>
                                     <a href="" class="tag-pill tag-default">angularjs</a>

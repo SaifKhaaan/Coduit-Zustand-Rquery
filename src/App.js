@@ -8,13 +8,20 @@ import Signup from './Pages/Signup';
 import Footer from './components/Footer';
 import Navbarauth from './components/Navbarauth';
 
+
+
 function App() {
   return (
+            
+
     <Router>
       <div className="App">
         <Navbarauth isLoggedIn={false} user={{}} /> {/* Pass appropriate props */}
         <Routes>
+          <>
+
           <Route exact path="/" element={<Home />} />  {/* Use element prop for components */}
+</>
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Signup />} />
           {/* Add more routes for other pages */}
@@ -22,6 +29,7 @@ function App() {
         <Footer />
       </div>
     </Router>
+
   );
 }
 
